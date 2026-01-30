@@ -1,5 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+
+import { Signup } from './pages/Signup/Signup';
+
 function App() {
-  return <div></div>;
+  return (
+    <Router>
+      <Routes>
+        <Route path='/' element={<Signup />} />
+        <Route path='/signup' element={<Signup />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
