@@ -1,9 +1,5 @@
 const RegistrationForm = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default RegistrationForm
+export default RegistrationForm;
