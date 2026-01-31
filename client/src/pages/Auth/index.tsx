@@ -1,4 +1,4 @@
-import signupBackground from '../../assets/auth-background.jpg';
+import signupBackground from '../../assets/images/auth-background.jpg';
 
 import AuthWrapper from './AuthWrapper';
 
