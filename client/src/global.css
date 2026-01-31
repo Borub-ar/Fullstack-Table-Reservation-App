@@ -64,3 +64,9 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
+
