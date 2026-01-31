@@ -3,7 +3,7 @@ import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
 
 const AuthWrapper = () => {
-  const [isLoginMode, setIsLoginMode] = useState(false);
+  const [isLoginMode, setIsLoginMode] = useState(true);
 
   const swapAuthMode = () => {
     setIsLoginMode(prevMode => !prevMode);
