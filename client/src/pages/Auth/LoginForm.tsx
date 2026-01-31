@@ -1,4 +1,5 @@
 import BasicButton from '../../components/BasicButton';
+import Checkbox from '../../components/Checkbox';
 import Input from '../../components/Input';
 
 const LoginForm = () => {
@@ -9,14 +10,15 @@ const LoginForm = () => {
       <Input type='text' inputId='username' labelText='Username' />
       <Input type='password' inputId='password' labelText='Password' />
 
-      <div className='flex'>
-        <input type='checkbox' name='' id='' />
-        <button className='text-sm'>Forgott Password?</button>
+      <div className='flex justify-between text-xs'>
+        <Checkbox id='rememberMe' label='Remember me' />
+        <button className='text-sm decoration-sol underline'>Forgott Password?</button>
       </div>
 
       <BasicButton label='Login' onClick={() => {}} />
-      <p>
-        Don't have account? <button>Register</button>
+
+      <p className='text-center text-xs'>
+        Don't have account? <button className='underline'>Register</button>
       </p>
     </div>
   );

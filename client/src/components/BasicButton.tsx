@@ -1,6 +1,6 @@
 interface BasicButtonProps {
   label: string;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const BasicButton = ({ label, onClick }: BasicButtonProps) => {
