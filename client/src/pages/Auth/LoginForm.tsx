@@ -1,6 +1,6 @@
-import BasicButton from '../../components/BasicButton';
-import Checkbox from '../../components/Checkbox';
-import Input from '../../components/Input';
+import BasicButton from '../../components/UI/BasicButton';
+import Checkbox from '../../components/UI/Checkbox';
+import Input from '../../components/UI/Input';
 
 const LoginForm = () => {
   return (
