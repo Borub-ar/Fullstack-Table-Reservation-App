@@ -2,7 +2,11 @@ import BasicButton from '../../components/UI/BasicButton';
 import Checkbox from '../../components/UI/Checkbox';
 import Input from '../../components/UI/Input';
 
-const LoginForm = () => {
+interface LoginFormProps {
+    swapToRegister: () => void;
+}
+
+const LoginForm = ({swapToRegister}: LoginFormProps) => {
   return (
     <div className='flex flex-col gap-4 text-white'>
       <h1 className='text-white font-medium text-2xl text-center mb-5'>login</h1>
@@ -18,7 +22,7 @@ const LoginForm = () => {
       <BasicButton label='Login' onClick={() => {}} />
 
       <p className='text-center text-xs'>
-        Don't have account? <button className='underline'>Register</button>
+        Don't have account? <button className='underline' type='button' onClick={swapToRegister}>Register</button>
       </p>
     </div>
   );
