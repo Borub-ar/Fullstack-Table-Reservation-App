@@ -1,0 +1,25 @@
+{
+  "name": "table-reservation-app",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Borub-ar/Fullstack-Table-Reservation-App#readme",
+  "bugs": {
+    "url": "https://github.com/Borub-ar/Fullstack-Table-Reservation-App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Borub-ar/Fullstack-Table-Reservation-App.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm run dev --prefix client",
+    "server": "npm run watch --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
