@@ -1,5 +1,20 @@
 const express = require('express');
+const cors = require('cors');
 
-app = express();
+const app = express();
 
-modeule.exports = app;
+const whitelist = ['http://localhost'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
+module.exports = app;
