@@ -1,14 +1,11 @@
 import type { Request, Response } from 'express';
+
 import { createNewUser } from '../../models/users/users.model.js';
 
-interface CreateUserBody {
-  username: string;
-  password: string;
-  email: string;
-}
+import type { CreateUserDto } from '../../types/user.js';
 
 const httpCreateNewUser = async (
-  req: Request<Record<string, never>, Record<string, never>, CreateUserBody>,
+  req: Request<Record<string, never>, Record<string, never>, CreateUserDto>,
   res: Response,
 ) => {
   const { username, password, email } = req.body;

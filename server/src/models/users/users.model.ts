@@ -1,12 +1,8 @@
 import User from './users.mongo.js';
 
-type CreateUserData = {
-  username: string;
-  password: string;
-  email: string;
-};
+import type { CreateUserDto } from '../../types/user.js';
 
-const createNewUser = async (userData: CreateUserData) => {
+const createNewUser = async (userData: CreateUserDto) => {
   const newUser = new User(userData);
   return await newUser.save();
 };
