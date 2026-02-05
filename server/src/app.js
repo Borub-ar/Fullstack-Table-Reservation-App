@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
+const userRouter = require('./routes/users/users.router');
+
 const app = express();
 
 const whitelist = ['http://localhost'];
@@ -16,5 +18,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+app.use('/users', userRouter);
 
 module.exports = app;
