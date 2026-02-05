@@ -1,7 +1,7 @@
-const http = require('http');
-const mongoose = require('mongoose');
+import http from 'http';
+import mongoose from 'mongoose';
 
-const app = require('./app');
+import app from './app.js';
 
 const PORT = process.env.PORT || 8000;
 const MONGO_URL =
@@ -10,7 +10,7 @@ const MONGO_URL =
 const server = http.createServer(app);
 
 mongoose.connection.once('open', () => console.log('Mongoose connected successfully'));
-mongoose.connection.on('error', err => onsole.error(`Mongoose connection error: ${err}`));
+mongoose.connection.on('error', err => console.error(`Mongoose connection error: ${err}`));
 
 const startServer = async () => {
   await mongoose.connect(MONGO_URL);
