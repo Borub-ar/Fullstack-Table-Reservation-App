@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useUser from '../../hooks/useUser';
 
-import { z } from 'zod';
+import { set, z } from 'zod';
 
 import { PASSWORD_VALIDATION } from '../../constants/constants';
 
@@ -36,7 +36,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>([]);
 
   const { registerUser, isLoading, error, success, reset } = useUser();
 
@@ -61,6 +61,29 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
     }
   };
 
+  const saveInputValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, dataset } = e.target;
+
+    switch (dataset.type) {
+      case 'username':
+        setValidationErrors(prev => ({ ...prev, username: [] }));
+        setUsername(value);
+        break;
+      case 'email':
+        setValidationErrors(prev => ({ ...prev, email: [] }));
+        setEmail(value);
+        break;
+      case 'password':
+        setValidationErrors(prev => ({ ...prev, password: [] }));
+        setPassword(value);
+        break;
+      case 'confirmPassword':
+        setValidationErrors(prev => ({ ...prev, confirmPassword: [] }));
+        setConfirmPassword(value);
+        break;
+    }
+  };
+
   return (
     <>
       {isLoading && <LoadingOverlay />}
@@ -72,29 +95,33 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
           type='text'
           inputId='username'
           labelText='Username'
-          errors={validationErrors.username}
-          onChange={e => setUsername(e.target.value)}
+          dataType='username'
+          errors={validationErrors.username || []}
+          onChange={saveInputValues}
         />
         <Input
           type='text'
           inputId='email'
           labelText='Email'
-          errors={validationErrors.email}
-          onChange={e => setEmail(e.target.value)}
+          dataType='email'
+          errors={validationErrors.email || []}
+          onChange={saveInputValues}
         />
         <Input
           type='password'
           inputId='password'
           labelText='Password'
-          errors={validationErrors.password}
-          onChange={e => setPassword(e.target.value)}
+          dataType='password'
+          errors={validationErrors.password || []}
+          onChange={saveInputValues}
         />
         <Input
           type='password'
           inputId='confirmPassword'
           labelText='Confirm Password'
-          errors={validationErrors.confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+          dataType='confirmPassword'
+          errors={validationErrors.confirmPassword || []}
+          onChange={saveInputValues}
         />
 
         <BasicButton label='Register' type='button' disabled={isLoading} onClick={handleRegistration} />
