@@ -4,24 +4,27 @@ interface InputProps {
   type: string;
   value?: string;
   dataType: string;
-  errors: string[];
+  errors?: string[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({ labelText, inputId, type, value, dataType, errors, onChange }: InputProps) => {
+  const hasErrors = errors && errors.length > 0;
+
   return (
     <div className='text-white relative'>
-      <label htmlFor={inputId} className={errors.length > 0 ? 'text-(--error-clr)' : 'text-white'}>
+      <label htmlFor={inputId} className={hasErrors ? 'text-(--error-clr)' : 'text-white'}>
         {labelText}
       </label>
       <input
         type={type}
         value={value}
         data-type={dataType}
-        className={`border-b-2 ${errors.length > 0 ? 'border-(--error-clr)' : 'border-white'} w-full`}
+        className={`border-b-2 ${hasErrors ? 'border-(--error-clr)' : 'border-white'} w-full`}
         onChange={onChange}
       />
-      {errors.length > 0 &&
+      {errors &&
+        hasErrors &&
         errors.map(error => (
           <p key={error} className='text-(--error-clr) text-xs'>
             {error}

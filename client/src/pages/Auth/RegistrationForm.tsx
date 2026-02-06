@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useUser from '../../hooks/useUser';
 
-import { set, z } from 'zod';
+import { z } from 'zod';
 
 import { PASSWORD_VALIDATION } from '../../constants/constants';
 
@@ -36,30 +36,9 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
   const { registerUser, isLoading, error, success, reset } = useUser();
-
-  const handleRegistration = async () => {
-    const result = validateForm();
-
-    if (!result) return;
-
-    const registrationResult = await registerUser({ username, email, password });
-    console.log(registrationResult);
-  };
-
-  const validateForm = () => {
-    const result = registrationSchema.safeParse({ username, email, password, confirmPassword });
-
-    if (!result.success) {
-      const parsedErrors = z.flattenError(result.error).fieldErrors;
-      setValidationErrors(parsedErrors);
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const saveInputValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, dataset } = e.target;
@@ -81,6 +60,27 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
         setValidationErrors(prev => ({ ...prev, confirmPassword: [] }));
         setConfirmPassword(value);
         break;
+    }
+  };
+
+  const handleRegistration = async () => {
+    const result = validateForm();
+
+    if (!result) return;
+
+    const registrationResult = await registerUser({ username, email, password });
+    console.log(registrationResult);
+  };
+
+  const validateForm = () => {
+    const result = registrationSchema.safeParse({ username, email, password, confirmPassword });
+
+    if (!result.success) {
+      const parsedErrors = z.flattenError(result.error).fieldErrors;
+      setValidationErrors(parsedErrors);
+      return false;
+    } else {
+      return true;
     }
   };
 
