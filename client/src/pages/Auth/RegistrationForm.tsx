@@ -97,7 +97,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
           onChange={e => setConfirmPassword(e.target.value)}
         />
 
-        <BasicButton label='Register' type='button' onClick={handleRegistration} />
+        <BasicButton label='Register' type='button' disabled={isLoading} onClick={handleRegistration} />
 
         <p className='text-center text-xs'>
           Already have an accout?{' '}
