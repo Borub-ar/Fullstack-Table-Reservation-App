@@ -3,11 +3,11 @@ import useUser from '../../hooks/useUser';
 
 import { z } from 'zod';
 
-import { PASSWORD_VALIDATION } from '../../constants/constants';
-
 import BasicButton from '../../components/UI/BasicButton';
 import Input from '../../components/UI/Input';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
+
+import { PASSWORD_VALIDATION } from '../../constants/constants';
 
 interface RegistrationFormProps {
   swapToLogin: () => void;
@@ -63,7 +63,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
 
   const validateForm = () => {
     const result = registrationSchema.safeParse(formData);
-    console.log(result);
+
     if (!result.success) {
       const parsedErrors = z.flattenError(result.error).fieldErrors;
       setValidationErrors(parsedErrors);
@@ -73,13 +73,24 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
     }
   };
 
+  const clearForm = () => {
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
+    setValidationErrors({});
+    reset();
+  };
+
   const handleRegistration = async () => {
     const result = validateForm();
 
     if (!result) return;
 
-    const registrationResult = await registerUser(formData);
-    console.log(registrationResult);
+    await registerUser(formData);
+    clearForm();
   };
 
   return (
@@ -91,6 +102,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
 
         <Input
           type='text'
+          value={formData.username}
           inputId='username'
           labelText='Username'
           dataType='username'
@@ -99,6 +111,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
         />
         <Input
           type='text'
+          value={formData.email}
           inputId='email'
           labelText='Email'
           dataType='email'
@@ -107,6 +120,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
         />
         <Input
           type='password'
+          value={formData.password}
           inputId='password'
           labelText='Password'
           dataType='password'
@@ -115,6 +129,7 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
         />
         <Input
           type='password'
+          value={formData.confirmPassword}
           inputId='confirmPassword'
           labelText='Confirm Password'
           dataType='confirmPassword'
