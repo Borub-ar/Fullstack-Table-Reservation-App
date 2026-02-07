@@ -17,6 +17,13 @@ interface ValidationErrors {
   [key: string]: string[];
 }
 
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const registrationSchema = z
   .object({
     username: z.string().min(3, 'Minimum 3 znaki'),
@@ -32,34 +39,37 @@ const registrationSchema = z
   });
 
 const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState<FormData>({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
   const { registerUser, isLoading, error, success, reset } = useUser();
 
-  const saveInputValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const saveInputValues = (e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>) => {
     const { value, dataset } = e.target;
 
-    switch (dataset.type) {
-      case 'username':
-        setValidationErrors(prev => ({ ...prev, username: [] }));
-        setUsername(value);
-        break;
-      case 'email':
-        setValidationErrors(prev => ({ ...prev, email: [] }));
-        setEmail(value);
-        break;
-      case 'password':
-        setValidationErrors(prev => ({ ...prev, password: [] }));
-        setPassword(value);
-        break;
-      case 'confirmPassword':
-        setValidationErrors(prev => ({ ...prev, confirmPassword: [] }));
-        setConfirmPassword(value);
-        break;
+    setFormData(prev => {
+      return { ...prev, [dataset.type as keyof typeof formData]: value };
+    });
+
+    setValidationErrors(prev => {
+      return { ...prev, [dataset.type as keyof typeof formData]: [] };
+    });
+  };
+
+  const validateForm = () => {
+    const result = registrationSchema.safeParse(formData);
+    console.log(result);
+    if (!result.success) {
+      const parsedErrors = z.flattenError(result.error).fieldErrors;
+      setValidationErrors(parsedErrors);
+      return false;
+    } else {
+      return true;
     }
   };
 
@@ -68,20 +78,8 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
 
     if (!result) return;
 
-    const registrationResult = await registerUser({ username, email, password });
+    const registrationResult = await registerUser(formData);
     console.log(registrationResult);
-  };
-
-  const validateForm = () => {
-    const result = registrationSchema.safeParse({ username, email, password, confirmPassword });
-
-    if (!result.success) {
-      const parsedErrors = z.flattenError(result.error).fieldErrors;
-      setValidationErrors(parsedErrors);
-      return false;
-    } else {
-      return true;
-    }
   };
 
   return (
