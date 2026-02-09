@@ -72,24 +72,19 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
     }
   };
 
-  const clearForm = () => {
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
-    setValidationErrors({});
-    reset();
-  };
-
   const handleRegistration = async () => {
     const result = validateForm();
 
     if (!result) return;
 
     await registerUser(formData);
-    clearForm();
+
+    if (success) {
+      swapToLogin();
+      reset();
+    } else {
+      console.log(error);
+    }
   };
 
   return (
@@ -136,10 +131,13 @@ const RegistrationForm = ({ swapToLogin }: RegistrationFormProps) => {
           onChange={saveInputValues}
         />
 
+        {error && <p className='text-red-500 text-center text-xs'>Something went wrong</p>}
+        {success && <p className='text-green-500 text-center text-xs'>Successfully registered</p>}
+
         <BasicButton label='Register' type='button' disabled={isLoading} onClick={handleRegistration} />
 
         <p className='text-center text-xs'>
-          Already have an accout?{' '}
+          Already have an account?{' '}
           <button className='underline' type='button' onClick={swapToLogin}>
             Login
           </button>
