@@ -18,6 +18,7 @@ const AuthWrapper = () => {
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
+      theme: 'dark',
     });
   };
 

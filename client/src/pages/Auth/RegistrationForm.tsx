@@ -2,12 +2,11 @@ import { useState } from 'react';
 import useUser from '../../hooks/useUser';
 
 import { z } from 'zod';
+import { registrationSchema } from '../../schemas/registration.js';
 
 import BasicButton from '../../components/UI/BasicButton';
 import Input from '../../components/UI/Input';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-
-import { PASSWORD_VALIDATION } from '../../constants/constants';
 
 interface RegistrationFormProps {
   swapToLogin: () => void;
@@ -24,20 +23,6 @@ interface FormData {
   password: string;
   confirmPassword: string;
 }
-
-const registrationSchema = z
-  .object({
-    username: z.string().min(3, 'Minimum 3 znaki'),
-    email: z.email('Nieprawidłowy email'),
-    password: z
-      .string()
-      .regex(PASSWORD_VALIDATION, 'Hasło musi mieć min. 8 znaków, dużą i małą literę, cyfrę oraz znak specjalny'),
-    confirmPassword: z.string().min(1, 'Potwierdź hasło'),
-  })
-  .refine(data => data.password === data.confirmPassword, {
-    message: 'Hasła nie są identyczne',
-    path: ['confirmPassword'],
-  });
 
 const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => {
   const [formData, setFormData] = useState<FormData>({
@@ -106,7 +91,7 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
           onChange={saveInputValues}
         />
         <Input
-          type='text'
+          type='email'
           value={formData.email}
           inputId='email'
           labelText='Email'
