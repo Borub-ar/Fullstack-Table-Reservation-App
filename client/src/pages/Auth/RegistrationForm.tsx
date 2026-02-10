@@ -68,9 +68,9 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
 
     if (response.success) {
       swapToLogin();
-      showToast(response.data.message || 'Successfully registered', 'success');
+      showToast(response.message, 'success');
     } else {
-      showToast(response.error || 'Something went wrong', 'error');
+      showToast(response.message, 'error');
     }
   };
 

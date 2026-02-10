@@ -13,13 +13,12 @@ export const httpRegisterUser = async (userData: RegisterUserData) => {
     const response = await axios.post(`${API_BASE_URL}/users`, userData);
     return {
       success: true,
-      data: response.data,
+      message: response.data.message,
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Registration failed',
+      message: error.response.data || 'Registration failed',
     };
   }
 };
