@@ -59,18 +59,19 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
   };
 
   const handleRegistration = async () => {
-    const result = validateForm();
+    const validationResult = validateForm();
+    if (!validationResult) return;
 
-    if (!result) return;
+    const registrationResponse = await registerUser(formData);
+    console.log(registrationResponse);
+    
+    if (!registrationResponse) return;
 
-    const response = await registerUser(formData);
-    if (!response) return;
-
-    if (response.success) {
+    if (registrationResponse.success) {
       swapToLogin();
-      showToast(response.message, 'success');
+      showToast(registrationResponse.message, 'success');
     } else {
-      showToast(response.message, 'error');
+      showToast(registrationResponse.message, 'error');
     }
   };
 

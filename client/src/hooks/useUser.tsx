@@ -9,7 +9,6 @@ const useUser = () => {
 
   const registerUser = async (userData: CreateUserData) => {
     if (isLoading) return;
-
     setIsLoading(true);
 
     const result = await httpRegisterUser(userData);

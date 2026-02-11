@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -11,21 +11,8 @@ interface RegisterUserData {
 export const httpRegisterUser = async (userData: RegisterUserData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/users`, userData);
-    return {
-      success: true,
-      message: response.data.message,
-    };
+    return response.data;
   } catch (error) {
-    const errorMessage =
-      axios.isAxiosError(error) && typeof error.response?.data?.message === 'string'
-        ? error.response.data.message
-        : error instanceof Error
-          ? error.message
-          : 'Registration failed';
-
-    return {
-      success: false,
-      message: errorMessage,
-    };
+    return (error as AxiosError).response?.data;
   }
 };

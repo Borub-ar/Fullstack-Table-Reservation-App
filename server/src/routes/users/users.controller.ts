@@ -23,5 +23,5 @@ export const httpCreateNewUser = tryCatch(async (req: Request, res: Response) =>
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
   await createNewUser({ username, hashedPassword, email });
-  return res.status(201).json({ message: 'User created successfully' });
+  return res.status(201).json({ success: true, message: 'User created successfully' });
 });
