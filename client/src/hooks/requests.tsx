@@ -16,9 +16,16 @@ export const httpRegisterUser = async (userData: RegisterUserData) => {
       message: response.data.message,
     };
   } catch (error) {
+    const errorMessage =
+      axios.isAxiosError(error) && typeof error.response?.data?.message === 'string'
+        ? error.response.data.message
+        : error instanceof Error
+          ? error.message
+          : 'Registration failed';
+
     return {
       success: false,
-      message: error.response.data || 'Registration failed',
+      message: errorMessage,
     };
   }
 };
