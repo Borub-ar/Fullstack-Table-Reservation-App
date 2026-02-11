@@ -32,10 +32,16 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
     confirmPassword: '',
   });
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [emailExternalError, setEmailExternalError] = useState(false);
+  const [usernameExternalError, setUsernameExternalError] = useState(false);
+
   const { registerUser, isLoading } = useUser();
 
   const saveInputValues = (e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>) => {
     const { value, dataset } = e.target;
+
+    if (dataset.type === 'email') setEmailExternalError(false);
+    if (dataset.type === 'username') setUsernameExternalError(false);
 
     setFormData(prev => {
       return { ...prev, [dataset.type as keyof typeof formData]: value };
@@ -50,29 +56,30 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
     const result = registrationSchema.safeParse(formData);
 
     if (!result.success) {
-      const parsedErrors = z.flattenError(result.error).fieldErrors;
-      setValidationErrors(parsedErrors);
-      return false;
-    } else {
-      return true;
+      setValidationErrors(z.flattenError(result.error).fieldErrors);
     }
+
+    return result.success;
   };
 
   const handleRegistration = async () => {
-    const validationResult = validateForm();
-    if (!validationResult) return;
+    setEmailExternalError(false);
+    setUsernameExternalError(false);
 
-    const registrationResponse = await registerUser(formData);
-    console.log(registrationResponse);
-    
-    if (!registrationResponse) return;
+    if (!validateForm()) return;
 
-    if (registrationResponse.success) {
+    const response = await registerUser(formData);
+    if (!response) return;
+
+    showToast(response.message, response.success ? 'success' : 'error');
+
+    if (response.success) {
       swapToLogin();
-      showToast(registrationResponse.message, 'success');
-    } else {
-      showToast(registrationResponse.message, 'error');
+      return;
     }
+
+    if (response.fields.includes('email')) setEmailExternalError(true);
+    if (response.fields.includes('username')) setUsernameExternalError(true);
   };
 
   return (
@@ -89,6 +96,7 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
           labelText='Username'
           dataType='username'
           errors={validationErrors.username || []}
+          noLabelError={usernameExternalError}
           onChange={saveInputValues}
         />
         <Input
@@ -98,6 +106,7 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
           labelText='Email'
           dataType='email'
           errors={validationErrors.email || []}
+          noLabelError={emailExternalError}
           onChange={saveInputValues}
         />
         <Input
