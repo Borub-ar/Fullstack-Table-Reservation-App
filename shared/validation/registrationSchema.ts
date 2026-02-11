@@ -13,11 +13,9 @@ export const registrationSchema = z
     username: z.string().min(3, USERNAME_MSG),
     email: z.email(EMAIL_MSG),
     password: z.string().regex(PASSWORD_VALIDATION, PASSWORD_MSG),
-    confirmPassword: z.string().min(1, CONFIRM_PASSWORD_MSG),
+    confirmPassword: z.string().min(1, CONFIRM_PASSWORD_MSG).optional(),
   })
-  .refine(data => data.password === data.confirmPassword, {
+  .refine(data => !data.confirmPassword || data.password === data.confirmPassword, {
     message: PASSWORD_MISMATCH_MSG,
     path: ['confirmPassword'],
   });
-
-  

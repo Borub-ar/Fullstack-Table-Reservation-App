@@ -1,1 +1,2 @@
-export const USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS';
+export const USER_ALREADY_EXISTS = 400;
+export const USER_INVALID_DATA = 409;
