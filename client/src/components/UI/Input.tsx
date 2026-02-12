@@ -12,18 +12,16 @@ interface InputProps {
 const Input = ({ labelText, inputId, type, value, dataType, errors, noLabelError, onChange }: InputProps) => {
   const hasErrors = errors && errors.length > 0;
 
+  const inputClasses = `border-b-2 ${hasErrors || noLabelError ? 'border-(--error-clr) text-(--error-clr)' : 'border-white text-white'} w-full`;
+  const labelClasses = hasErrors || noLabelError ? 'text-(--error-clr)' : 'text-white';
+
   return (
     <div className='text-white relative'>
-      <label htmlFor={inputId} className={hasErrors || noLabelError ? 'text-(--error-clr)' : 'text-white'}>
+      <label htmlFor={inputId} className={labelClasses}>
         {labelText}
       </label>
-      <input
-        type={type}
-        value={value}
-        data-type={dataType}
-        className={`border-b-2 ${hasErrors || noLabelError ? 'border-(--error-clr) text-(--error-clr)' : 'border-white text-white'} w-full`}
-        onChange={onChange}
-      />
+      <input type={type} value={value} data-type={dataType} className={inputClasses} onChange={onChange} />
+
       {errors &&
         hasErrors &&
         errors.map(error => (
