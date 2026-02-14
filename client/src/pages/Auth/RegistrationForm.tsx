@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
 import { z } from 'zod';
@@ -7,11 +8,7 @@ import { registrationSchema } from '../../../../shared/validation/registrationSc
 import BasicButton from '../../components/UI/BasicButton';
 import Input from '../../components/UI/Input';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-
-interface RegistrationFormProps {
-  swapToLogin: () => void;
-  showToast: (message: string, type: 'success' | 'error') => void;
-}
+import type { AuthOutletContext } from './AuthWrapper';
 
 interface ValidationErrors {
   [key: string]: string[];
@@ -24,7 +21,9 @@ interface FormData {
   confirmPassword: string;
 }
 
-const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => {
+const RegistrationForm = () => {
+  const navigate = useNavigate();
+  const { showToast } = useOutletContext<AuthOutletContext>();
   const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
@@ -74,7 +73,7 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
     showToast(response.message, response.success ? 'success' : 'error');
 
     if (response.success) {
-      swapToLogin();
+      navigate('/auth/login');
       return;
     }
     if (response?.fields) {
@@ -133,7 +132,7 @@ const RegistrationForm = ({ swapToLogin, showToast }: RegistrationFormProps) => 
 
         <p className='text-center text-xs'>
           Already have an account?{' '}
-          <button className='underline' type='button' onClick={swapToLogin}>
+          <button className='underline' type='button' onClick={() => navigate('/auth/login')}>
             Login
           </button>
         </p>

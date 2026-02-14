@@ -1,17 +1,12 @@
-import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import LoginForm from './LoginForm';
-import RegistrationForm from './RegistrationForm';
+export interface AuthOutletContext {
+  showToast: (message: string, type: 'success' | 'error') => void;
+}
 
 const AuthWrapper = () => {
-  const [isLoginMode, setIsLoginMode] = useState(false);
-
-  const swapAuthMode = () => {
-    setIsLoginMode(prevMode => !prevMode);
-  };
-
   const showToast = (message: string, type: 'success' | 'error') => {
     toast[type](message, {
       position: 'top-center',
@@ -27,8 +22,7 @@ const AuthWrapper = () => {
       <ToastContainer />
 
       <form className='flex-1 max-w-100 border-2 border-white rounded-md py-12 px-8 mx-5 backdrop-blur-md'>
-        {isLoginMode && <LoginForm swapToRegister={swapAuthMode} showToast={showToast} />}
-        {!isLoginMode && <RegistrationForm swapToLogin={swapAuthMode} showToast={showToast} />}
+        <Outlet context={{ showToast }} />
       </form>
     </>
   );

@@ -1,21 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import BasicButton from '../../components/UI/BasicButton';
 import Checkbox from '../../components/UI/Checkbox';
 import Input from '../../components/UI/Input';
 
-interface LoginFormProps {
-  swapToRegister: () => void;
-  showToast: (message: string, type: 'success' | 'error') => void;
-}
-
-const LoginForm = ({ swapToRegister }: LoginFormProps) => {
+const LoginForm = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = () => {
-    console.log('LOGIN');
+    console.log('LOGIN', { username, password, rememberMe });
   };
 
   return (
@@ -36,7 +33,7 @@ const LoginForm = ({ swapToRegister }: LoginFormProps) => {
 
       <p className='text-center text-xs'>
         Don't have an account?{' '}
-        <button className='underline' type='button' onClick={swapToRegister}>
+        <button className='underline' type='button' onClick={() => navigate('/auth/register')}>
           Register
         </button>
       </p>

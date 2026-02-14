@@ -1,13 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import Signup from './pages/Auth/index';
+import AuthWrapper from './pages/Auth/AuthWrapper';
+import EmailValidation from './pages/Auth/EmailValidation';
+import LoginForm from './pages/Auth/LoginForm';
+import RegistrationForm from './pages/Auth/RegistrationForm';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Signup />} />
-        <Route path='/signup' element={<Signup />} />
+        <Route path='/' element={<Navigate to='/auth/register' replace />} />
+        
+        <Route path='/auth' element={<Signup />}>
+          <Route element={<AuthWrapper />}>
+            <Route path='register' element={<RegistrationForm />} />
+            <Route path='login' element={<LoginForm />} />
+            <Route path='verify-email' element={<EmailValidation />} />
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );

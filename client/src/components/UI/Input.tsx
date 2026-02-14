@@ -3,7 +3,7 @@ interface InputProps {
   inputId: string;
   type: string;
   value?: string;
-  dataType: string;
+  dataType?: string;
   errors?: string[];
   noLabelError?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>) => void;
