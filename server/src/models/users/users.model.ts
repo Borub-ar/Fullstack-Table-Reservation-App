@@ -1,12 +1,23 @@
-import User from './users.mongo.js';
+import bcrypt from 'bcrypt';
 
-import type { CreateUserDto } from '../../types/user.js';
+import User from './users.mongo.js';
 import AppError from '../../AppError.js';
 
-import { USER_ALREADY_EXISTS } from '../../constants/errorCodes.js';
+import type { CreateUserDto } from '../../types/user.js';
+import { registrationSchema } from '../../../../shared/validation/registrationSchema.js';
 
-const createNewUser = async (userData: CreateUserDto) => {
+import { USER_ALREADY_EXISTS, USER_INVALID_DATA } from '../../constants/errorCodes.js';
+
+const SALT_ROUNDS = 10;
+
+const createUser = async (userData: CreateUserDto) => {
   try {
+    const validationResult = registrationSchema.safeParse(userData);
+
+    if (!validationResult.success) {
+      throw new AppError(USER_INVALID_DATA, 'Invalid data', 400);
+    }
+
     const existingUser = await User.findOne({ username: userData.username });
     if (existingUser) {
       throw new AppError(USER_ALREADY_EXISTS, 'This username is already taken', 400, ['username']);
@@ -17,7 +28,16 @@ const createNewUser = async (userData: CreateUserDto) => {
       throw new AppError(USER_ALREADY_EXISTS, 'This email is already taken', 400, ['email']);
     }
 
-    const newUser = new User(userData);
+    const passwordHash = await bcrypt.hash(userData.password, SALT_ROUNDS);
+
+    const userToCreate = {
+      username: userData.username,
+      email: userData.email,
+      passwordHash,
+      userId: crypto.randomUUID(),
+    };
+
+    const newUser = new User(userToCreate);
     return await newUser.save();
   } catch (error) {
     if (error instanceof AppError) throw error;
@@ -25,4 +45,4 @@ const createNewUser = async (userData: CreateUserDto) => {
   }
 };
 
-export { createNewUser };
+export { createUser };

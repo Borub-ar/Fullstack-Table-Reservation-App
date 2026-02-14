@@ -1,5 +1,5 @@
 export interface CreateUserDto {
   username: string;
-  hashedPassword: string;
+  password: string;
   email: string;
 }
