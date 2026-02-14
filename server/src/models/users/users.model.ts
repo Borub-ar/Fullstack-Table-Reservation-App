@@ -12,21 +12,10 @@ const SALT_ROUNDS = 10;
 
 const createUser = async (userData: CreateUserDto) => {
   try {
-    const validationResult = registrationSchema.safeParse(userData);
+    validateRegistrationData(userData);
 
-    if (!validationResult.success) {
-      throw new AppError(USER_INVALID_DATA, 'Invalid data', 400);
-    }
-
-    const existingUser = await User.findOne({ username: userData.username });
-    if (existingUser) {
-      throw new AppError(USER_ALREADY_EXISTS, 'This username is already taken', 400, ['username']);
-    }
-
-    const existingEmail = await User.findOne({ email: userData.email });
-    if (existingEmail) {
-      throw new AppError(USER_ALREADY_EXISTS, 'This email is already taken', 400, ['email']);
-    }
+    await checkIfUserExists(userData);
+    await checkIfEmailExists(userData);
 
     const passwordHash = await bcrypt.hash(userData.password, SALT_ROUNDS);
 
@@ -42,6 +31,27 @@ const createUser = async (userData: CreateUserDto) => {
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw new Error('Something went wrong while creating user');
+  }
+};
+
+const validateRegistrationData = (userData: CreateUserDto) => {
+  const validationResult = registrationSchema.safeParse(userData);
+  if (!validationResult.success) {
+    throw new AppError(USER_INVALID_DATA, 'Invalid data', 400);
+  }
+};
+
+const checkIfUserExists = async (userData: CreateUserDto) => {
+  const existingUser = await User.findOne({ username: userData.username });
+  if (existingUser) {
+    throw new AppError(USER_ALREADY_EXISTS, 'This username is already taken', 400, ['username']);
+  }
+};
+
+const checkIfEmailExists = async (userData: CreateUserDto) => {
+  const existingEmail = await User.findOne({ email: userData.email });
+  if (existingEmail) {
+    throw new AppError(USER_ALREADY_EXISTS, 'This email is already taken', 400, ['email']);
   }
 };
 
