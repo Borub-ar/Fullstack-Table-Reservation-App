@@ -24,12 +24,14 @@ interface FormData {
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const { showToast } = useOutletContext<AuthOutletContext>();
+
   const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [emailExternalError, setEmailExternalError] = useState(false);
   const [usernameExternalError, setUsernameExternalError] = useState(false);
@@ -73,7 +75,7 @@ const RegistrationForm = () => {
     showToast(response.message, response.success ? 'success' : 'error');
 
     if (response.success) {
-      navigate('/auth/login');
+      navigate('/auth/verify-email');
       return;
     }
     if (response?.fields) {
