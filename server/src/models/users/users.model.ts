@@ -8,7 +8,12 @@ import { registrationSchema } from '../../../../shared/validation/registrationSc
 import { generateVerificationToken } from '../../utils/generateVerificationToken.js';
 import { sendVerificationEmailService } from '../../services/email.service.js';
 
-import { USER_ALREADY_EXISTS, USER_INVALID_DATA, USER_NOT_FOUND } from '../../constants/errorCodes.js';
+import {
+  EMAIL_ALREADY_TAKEN,
+  EMAIL_NOT_FOUND,
+  INVALID_DATA,
+  USERNAME_ALREADY_TAKEN,
+} from '../../constants/errorCodes.js';
 
 const SALT_ROUNDS = 10;
 const VERIFICATION_TOKEN_EXPIRES_IN = 1000 * 60 * 60 * 24;
@@ -37,6 +42,7 @@ const createUser = async (userData: CreateUserDto) => {
 
     await sendVerificationEmailService(verificationToken, userData.email);
   } catch (error) {
+    console.error('Error creating user:', error);
     if (error instanceof AppError) throw error;
     throw new Error('Something went wrong while creating user');
   }
@@ -45,36 +51,42 @@ const createUser = async (userData: CreateUserDto) => {
 const validateRegistrationData = (userData: CreateUserDto) => {
   const validationResult = registrationSchema.safeParse(userData);
   if (!validationResult.success) {
-    throw new AppError(USER_INVALID_DATA, 'Invalid data', 400);
+    throw new AppError(INVALID_DATA.errorCode, INVALID_DATA.message, 400);
   }
 };
 
 const checkIfUserExists = async (userData: CreateUserDto) => {
   const existingUser = await User.findOne({ username: userData.username });
   if (existingUser) {
-    throw new AppError(USER_ALREADY_EXISTS, 'This username is already taken', 400, ['username']);
+    throw new AppError(USERNAME_ALREADY_TAKEN.errorCode, USERNAME_ALREADY_TAKEN.message, 400, ['username']);
   }
 };
 
 const checkIfEmailExists = async (userData: CreateUserDto) => {
   const existingEmail = await User.findOne({ email: userData.email });
   if (existingEmail) {
-    throw new AppError(USER_ALREADY_EXISTS, 'This email is already taken', 400, ['email']);
+    throw new AppError(EMAIL_ALREADY_TAKEN.errorCode, EMAIL_ALREADY_TAKEN.message, 400, ['email']);
   }
 };
 
 const sendVerificationEmail = async (email: string) => {
-  const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
 
-  if (!user) {
-    throw new AppError(USER_NOT_FOUND, 'User with this email does not exist', 400);
+    if (!user) {
+      throw new AppError(EMAIL_NOT_FOUND.errorCode, EMAIL_NOT_FOUND.message, 404);
+    }
+
+    user.verificationToken = generateVerificationToken();
+    user.verificationTokenExpiresAt = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN);
+
+    await user.save();
+    return await sendVerificationEmailService(user.verificationToken, email);
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    if (error instanceof AppError) throw error;
+    throw new Error('Something went wrong while sending verification email');
   }
-
-  user.verificationToken = generateVerificationToken();
-  user.verificationTokenExpiresAt = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN);
-  await user.save();
-
-  await sendVerificationEmailService(user.verificationToken, email);
 };
 
 export { createUser, sendVerificationEmail };

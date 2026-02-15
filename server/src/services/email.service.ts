@@ -18,8 +18,8 @@ export const sendVerificationEmailService = async (token: string, email: string)
     };
 
     const info = await transporter.sendMail(emailOptions);
+    return info;
   } catch (error) {
-    console.error('Failed to send verification email:', error);
-    throw new Error('Failed to send verification email');
+    throw error;
   }
 };
