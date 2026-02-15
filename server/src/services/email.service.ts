@@ -14,7 +14,7 @@ export const sendVerificationEmailService = async (token: string, email: string)
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Verify your email',
-      html: `Click here to verify your email: <a href="http://localhost:3000/verify-email?token=${token}">Verify</a>`,
+      html: `Click here to verify your email: <a href="http://localhost:5173/auth/verify-email?token=${token}">Verify</a>`,
     };
 
     const info = await transporter.sendMail(emailOptions);

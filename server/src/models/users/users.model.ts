@@ -14,6 +14,7 @@ import {
   EMAIL_NOT_FOUND,
   INVALID_DATA,
   USERNAME_ALREADY_TAKEN,
+  INVALID_TOKEN,
 } from '../../constants/errorCodes.js';
 
 const SALT_ROUNDS = 10;
@@ -26,13 +27,13 @@ const createUser = async (userData: CreateUserDto) => {
     await checkIfEmailExists(userData);
 
     const passwordHash = await bcrypt.hash(userData.password, SALT_ROUNDS);
-    const verificationTokens = await generateVerificationToken();
+    const verificationToken = generateVerificationToken();
 
     const userToCreate = {
       username: userData.username,
       email: userData.email,
       passwordHash,
-      verificationToken: verificationTokens.token,
+      verificationToken: verificationToken,
       verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN),
       userId: crypto.randomUUID(),
     };
@@ -40,7 +41,7 @@ const createUser = async (userData: CreateUserDto) => {
     const newUser = new User(userToCreate);
     await newUser.save();
 
-    await sendVerificationEmailService(verificationTokens.hashedToken, userData.email);
+    await sendVerificationEmailService(verificationToken, userData.email);
   } catch (error) {
     console.error('Error creating user:', error);
     if (error instanceof AppError) throw error;
@@ -77,13 +78,13 @@ const sendVerificationEmail = async (email: string) => {
       throw new AppError(EMAIL_NOT_FOUND.errorCode, EMAIL_NOT_FOUND.message, 404);
     }
 
-    const verificationTokens = await generateVerificationToken();
+    const verificationToken = generateVerificationToken();
 
-    user.verificationToken = verificationTokens.token;
+    user.verificationToken = verificationToken;
     user.verificationTokenExpiresAt = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN);
 
     await user.save();
-    return await sendVerificationEmailService(verificationTokens.hashedToken, email);
+    return await sendVerificationEmailService(verificationToken, email);
   } catch (error) {
     console.error('Error sending verification email:', error);
     if (error instanceof AppError) throw error;
@@ -91,4 +92,24 @@ const sendVerificationEmail = async (email: string) => {
   }
 };
 
-export { createUser, sendVerificationEmail };
+const verifyEmail = async (token: string) => {
+  try {
+    const user = await User.findOne({ verificationToken: token });
+
+    if (!user) {
+      throw new AppError(INVALID_TOKEN.errorCode, INVALID_TOKEN.message, 400);
+    }
+
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpiresAt = null;
+
+    await user.save();
+  } catch (error) {
+    console.error('Error verifying email:', error);
+    if (error instanceof AppError) throw error;
+    throw new Error('Something went wrong while verifying email');
+  }
+};
+
+export { createUser, sendVerificationEmail, verifyEmail };
