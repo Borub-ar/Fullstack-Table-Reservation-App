@@ -11,10 +11,11 @@ import { sendVerificationEmailService } from '../../services/email.service.js';
 
 import {
   EMAIL_ALREADY_TAKEN,
-  EMAIL_NOT_FOUND,
+  EMAIL_SENT_IF_EXISTS,
   INVALID_DATA,
   USERNAME_ALREADY_TAKEN,
   INVALID_TOKEN,
+  TOKEN_EXPIRED,
 } from '../../constants/errorCodes.js';
 
 const SALT_ROUNDS = 10;
@@ -33,7 +34,7 @@ const createUser = async (userData: CreateUserDto) => {
       username: userData.username,
       email: userData.email,
       passwordHash,
-      verificationToken: verificationToken,
+      verificationToken,
       verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN),
       userId: crypto.randomUUID(),
     };
@@ -75,7 +76,7 @@ const sendVerificationEmail = async (email: string) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      throw new AppError(EMAIL_NOT_FOUND.errorCode, EMAIL_NOT_FOUND.message, 404);
+      throw new AppError(EMAIL_SENT_IF_EXISTS.errorCode, EMAIL_SENT_IF_EXISTS.message, 200);
     }
 
     const verificationToken = generateVerificationToken();
@@ -98,6 +99,10 @@ const verifyEmail = async (token: string) => {
 
     if (!user) {
       throw new AppError(INVALID_TOKEN.errorCode, INVALID_TOKEN.message, 400);
+    }
+
+    if (user.verificationTokenExpiresAt && user.verificationTokenExpiresAt < new Date()) {
+      throw new AppError(TOKEN_EXPIRED.errorCode, TOKEN_EXPIRED.message, 400);
     }
 
     user.isVerified = true;

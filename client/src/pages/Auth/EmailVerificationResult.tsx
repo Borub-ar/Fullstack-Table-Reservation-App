@@ -8,7 +8,7 @@ import BasicButton from '../../components/UI/BasicButton';
 
 const VERIFYING_EMAIL_LABEL = 'Verifying your email...';
 const EMAIL_VERIFIED_SUCCESSFULLY_LABEL = 'Email verified successfully!';
-const EMAIL_VERIFICATION_FAILED_LABEL = 'Email verification failed';
+const EMAIL_VERIFICATION_FAILED_LABEL = 'Email verification failed!';
 
 const EmailVerificationResult = () => {
   const { verifyEmail, isLoading } = useUser();
@@ -50,7 +50,7 @@ const EmailVerificationResult = () => {
     <>
       {isLoading && <LoadingOverlay />}
 
-      <div className='flex flex-col items-center gap-4 text-white'>
+      <div className='flex flex-col gap-4 text-white'>
         <h1 className='text-white font-medium text-2xl text-center mb-5'>{displayLabel}</h1>
         <BasicButton label='Login' type='button' onClick={() => navigate('/auth/login')} />
       </div>

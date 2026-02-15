@@ -16,7 +16,7 @@ function App() {
             <Route path='register' element={<RegistrationForm />} />
             <Route path='login' element={<LoginForm />} />
             <Route path='verify-email' element={<EmailVerificationNotice />} />
-            <Route path='verify-emai-result' element={<EmailVerificationResult />} />
+            <Route path='verify-email-result' element={<EmailVerificationResult />} />
           </Route>
         </Route>
 

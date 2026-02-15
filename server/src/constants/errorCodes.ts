@@ -18,12 +18,17 @@ export const INVALID_DATA = {
   message: 'Invalid data',
 };
 
-export const EMAIL_NOT_FOUND = {
-  errorCode: 404,
-  message: 'User with this email does not exist',
+export const EMAIL_SENT_IF_EXISTS = {
+  errorCode: 200,
+  message: 'If email exists, we have sent you a verification email',
 };
 
 export const INVALID_TOKEN = {
   errorCode: 400,
   message: 'Invalid token',
+};
+
+export const TOKEN_EXPIRED = {
+  errorCode: 400,
+  message: 'Token expired, please request a new verification email',
 };
