@@ -29,7 +29,7 @@ const LoginForm = () => {
         </button>
       </div>
 
-      <BasicButton label='Login' type='button' onClick={handleLogin} />
+      <BasicButton label='Login' onClick={handleLogin} />
 
       <p className='text-center text-xs'>
         Don't have an account?{' '}

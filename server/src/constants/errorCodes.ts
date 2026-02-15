@@ -25,10 +25,10 @@ export const EMAIL_SENT_IF_EXISTS = {
 
 export const INVALID_TOKEN = {
   errorCode: 400,
-  message: 'Invalid token',
+  message: 'Something went wrong, please request a new verification email',
 };
 
 export const TOKEN_EXPIRED = {
   errorCode: 400,
-  message: 'Token expired, please request a new verification email',
+  message: 'Verification token expired, please request a new verification email',
 };

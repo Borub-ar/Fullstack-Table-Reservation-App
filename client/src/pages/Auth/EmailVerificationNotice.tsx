@@ -31,7 +31,7 @@ const EmailVerificationNotice = () => {
 
         <p className='text-center'>We've sent you an email with a verification link. Please check your inbox.</p>
 
-        <BasicButton label='Resend Email' type='button' onClick={handleResendEmail} />
+        <BasicButton label='Resend Email' onClick={handleResendEmail} />
 
         <button className='ext-center underline cursor-pointer' type='button' onClick={() => navigate('/auth/login')}>
           Login

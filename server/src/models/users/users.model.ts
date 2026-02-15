@@ -108,7 +108,6 @@ const verifyEmail = async (token: string) => {
     user.isVerified = true;
     user.verificationToken = null;
     user.verificationTokenExpiresAt = null;
-
     await user.save();
   } catch (error) {
     console.error('Error verifying email:', error);
