@@ -5,6 +5,7 @@ import AppError from '../../AppError.js';
 
 import type { CreateUserDto } from '../../types/user.js';
 import { registrationSchema } from '../../../../shared/validation/registrationSchema.js';
+
 import { generateVerificationToken } from '../../utils/generateVerificationToken.js';
 import { sendVerificationEmailService } from '../../services/email.service.js';
 
@@ -25,22 +26,21 @@ const createUser = async (userData: CreateUserDto) => {
     await checkIfEmailExists(userData);
 
     const passwordHash = await bcrypt.hash(userData.password, SALT_ROUNDS);
-    const verificationToken = generateVerificationToken();
-    const verificationTokenExpiresAt = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN);
+    const verificationTokens = await generateVerificationToken();
 
     const userToCreate = {
       username: userData.username,
       email: userData.email,
       passwordHash,
-      verificationToken,
-      verificationTokenExpiresAt,
+      verificationToken: verificationTokens.token,
+      verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN),
       userId: crypto.randomUUID(),
     };
 
     const newUser = new User(userToCreate);
     await newUser.save();
 
-    await sendVerificationEmailService(verificationToken, userData.email);
+    await sendVerificationEmailService(verificationTokens.hashedToken, userData.email);
   } catch (error) {
     console.error('Error creating user:', error);
     if (error instanceof AppError) throw error;
@@ -77,11 +77,13 @@ const sendVerificationEmail = async (email: string) => {
       throw new AppError(EMAIL_NOT_FOUND.errorCode, EMAIL_NOT_FOUND.message, 404);
     }
 
-    user.verificationToken = generateVerificationToken();
+    const verificationTokens = await generateVerificationToken();
+
+    user.verificationToken = verificationTokens.token;
     user.verificationTokenExpiresAt = new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN);
 
     await user.save();
-    return await sendVerificationEmailService(user.verificationToken, email);
+    return await sendVerificationEmailService(verificationTokens.hashedToken, email);
   } catch (error) {
     console.error('Error sending verification email:', error);
     if (error instanceof AppError) throw error;
