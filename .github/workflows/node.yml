@@ -6,12 +6,18 @@ on:
     branches: [main]
 jobs:
   build:
+    env: 
+      CI: true
+    strategy:
+      matrix:
+        node-version: [21.x, 22.x, 23.x, 24.x]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js version 24
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: ${{ matrix.node-version }}
       - run: npm run setup
       - run: npm run build
+      - run: npm run test
