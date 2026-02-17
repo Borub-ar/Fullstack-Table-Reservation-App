@@ -2,7 +2,7 @@ name: Table Reservation App CI
 on:
   push:
     branches: [main]
-  pul_request:
+  pull_request:
     branches: [main]
 jobs:
   build:
