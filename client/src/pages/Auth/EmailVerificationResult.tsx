@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 
 import useUser from '../../hooks/useUser';
 
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import BasicButton from '../../components/UI/BasicButton';
+import type { AuthOutletContext } from './AuthWrapper';
 
 const VERIFYING_EMAIL_LABEL = 'Verifying your email...';
+const SOMETHING_WENT_WRONG_LABEL = 'Something went wrong, please request a new verification email';
 
 const EmailVerificationResult = () => {
-  const { verifyEmail, isLoading } = useUser();
+  const { verifyEmail, resendVerificationEmail, isLoading } = useUser();
   const navigate = useNavigate();
+  const { showToast } = useOutletContext<AuthOutletContext>();
 
   const [resultLabel, setResultLabel] = useState(VERIFYING_EMAIL_LABEL);
-  const [showNewVerificationEmailButton, setShowNewVerificationEmailButton] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const verifiedTokenRef = useRef<string | null>(null);
 
@@ -29,13 +32,16 @@ const EmailVerificationResult = () => {
     const verifyEmailFunction = async () => {
       const response = await verifyEmail(token);
 
-
       if (!response) {
-        setResultLabel('Something went wrong, please request a new verification email');
+        setResultLabel(SOMETHING_WENT_WRONG_LABEL);
+        setIsError(true);
         return;
       }
 
-      if (!response.success) setShowNewVerificationEmailButton(true);
+      if (!response.success) {
+        setIsError(true);
+      }
+
       setResultLabel(response.message);
     };
 
@@ -43,7 +49,12 @@ const EmailVerificationResult = () => {
   }, [token, verifyEmail]);
 
   const handleRequestNewVerificationEmail = async () => {
-    console.log('request new verification email');
+    if (!token) return;
+
+    const response = await resendVerificationEmail(token);
+    if (!response) return;
+
+    showToast(response.message, response.success ? 'success' : 'error');
   };
 
   return (
@@ -52,10 +63,8 @@ const EmailVerificationResult = () => {
 
       <div className='flex flex-col gap-4 text-white'>
         <h1 className='text-white font-medium text-2xl text-center mb-5'>{resultLabel}</h1>
-        {showNewVerificationEmailButton && (
-          <BasicButton label='Request new verification email' onClick={handleRequestNewVerificationEmail} />
-        )}
-        <BasicButton label='Login' onClick={() => navigate('/auth/login')} />
+        {isError && <BasicButton label='Resend Verification Email' onClick={handleRequestNewVerificationEmail} />}
+        {!isError && <BasicButton label='Login' onClick={() => navigate('/auth/login')} />}
       </div>
     </>
   );

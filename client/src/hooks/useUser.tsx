@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { httpRegisterUser, httpSendVerificationEmail, httpVerifyEmail } from './requests';
+import { httpRegisterUser, httpResendVerificationEmail, httpSendVerificationEmail, httpVerifyEmail } from './requests';
 
 import type { CreateUserData } from '../types/user';
 
@@ -34,7 +34,16 @@ const useUser = () => {
     return result;
   };
 
-  return { registerUser, sendVerificationEmail, verifyEmail, isLoading };
+  const resendVerificationEmail = async (token: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const result = await httpResendVerificationEmail(token);
+    setIsLoading(false);
+    return result;
+  };
+
+  return { registerUser, sendVerificationEmail, verifyEmail, resendVerificationEmail, isLoading };
 };
 
 export default useUser;
