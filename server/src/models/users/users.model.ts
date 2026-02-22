@@ -12,8 +12,10 @@ import { sendVerificationEmailService } from '../../services/email.service.js';
 import {
   EMAIL_ALREADY_TAKEN,
   INVALID_DATA,
+  INVALID_CREDENTIALS,
   USERNAME_ALREADY_TAKEN,
   INVALID_TOKEN,
+  UNVERIFIED_ACCOUNT,
   TOKEN_EXPIRED,
 } from '../../constants/errorCodes.js';
 
@@ -161,8 +163,31 @@ const getVerifiableUserByToken = async (token: string | undefined) => {
   return user;
 };
 
-const loginUser = async (email: string, password: string) => {
-  console.log('LOGIN', { email, password });
+const loginUser = async (username: string, password: string) => {
+  try {
+    console.log('LOGIN', { username, password });
+    const user = await User.findOne({ username, password });
+
+    if (!user) {
+      throw new AppError(INVALID_CREDENTIALS.errorCode, INVALID_CREDENTIALS.message, 400);
+    }
+
+    const passwordIsValid = await bcrypt.compare(password, user.passwordHash);
+
+    if (!passwordIsValid) {
+      throw new AppError(INVALID_CREDENTIALS.errorCode, INVALID_CREDENTIALS.message, 400);
+    }
+
+    if (!user.isVerified) {
+      throw new AppError(UNVERIFIED_ACCOUNT.errorCode, UNVERIFIED_ACCOUNT.message, 400);
+    }
+    
+    return { success: true, message: 'Login successful' };
+  } catch (error) {
+    console.error('Error logging in:', error);
+    if (error instanceof AppError) throw error;
+    throw new Error('Something went wrong while logging in', { cause: error });
+  }
 };
 
 const logoutUser = async () => {

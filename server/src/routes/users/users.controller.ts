@@ -7,6 +7,7 @@ import {
   sendVerificationEmail,
   verifyEmail,
   resendVerificationEmail,
+  loginUser,
 } from '../../models/users/users.model.js';
 
 export const createUserHandler = tryCatch(async (req: Request, res: Response) => {
@@ -35,7 +36,9 @@ export const verifyEmailHandler = tryCatch(async (req: Request, res: Response) =
 });
 
 export const loginUserHandler = tryCatch(async (req: Request, res: Response) => {
-  console.log('login');
+  const { username, password } = req.body;
+  const response = await loginUser(username, password);
+  return res.status(200).json(response);
 });
 
 export const logoutUserHandler = tryCatch(async (req: Request, res: Response) => {

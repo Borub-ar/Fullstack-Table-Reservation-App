@@ -27,3 +27,13 @@ export const TOKEN_EXPIRED = {
   errorCode: 400,
   message: 'Verification token expired, please request a new verification email',
 };
+
+export const INVALID_CREDENTIALS = {
+  errorCode: 400,
+  message: 'Invalid credentials',
+};
+
+export const UNVERIFIED_ACCOUNT = {
+  errorCode: 400,
+  message: 'Unverified account',
+};
