@@ -23,9 +23,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: |
-            - package-lock.json
-            - server/package-lock.json
-            - client/package-lock.json
+            package-lock.json
+            server/package-lock.json
+            client/package-lock.json
 
       - name: MongoDB in GitHub Actions
         uses: supercharge/mongodb-github-action@1.12.1
