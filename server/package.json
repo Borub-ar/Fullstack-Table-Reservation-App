@@ -7,7 +7,7 @@
   "author": "Kacper Barabasz",
   "main": "server.ts",
   "scripts": {
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test": "vitest run",
     "watch": "nodemon --exec tsx src/server.ts",
     "dev": "tsx src/server.ts",
     "build": "tsc -p tsconfig.json",
