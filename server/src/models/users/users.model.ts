@@ -26,12 +26,15 @@ const createUser = async (userData: CreateUserDto) => {
     await checkIfUserExists(userData);
     await checkIfEmailExists(userData);
 
+    const usernameNormalized = userData.username.trim();
+    const emailNormalized = userData.email.trim().toLowerCase();
+
     const passwordHash = await bcrypt.hash(userData.password, SALT_ROUNDS);
     const verificationToken = generateVerificationToken();
 
     const userToCreate = {
-      username: userData.username,
-      email: userData.email,
+      username: usernameNormalized,
+      email: emailNormalized,
       passwordHash,
       verificationToken,
       verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN),
@@ -59,14 +62,16 @@ const validateRegistrationData = (userData: CreateUserDto) => {
 };
 
 const checkIfUserExists = async (userData: CreateUserDto) => {
-  const existingUser = await User.findOne({ username: userData.username });
+  const usernameNormalized = userData.username.trim();
+  const existingUser = await User.findOne({ username: usernameNormalized });
   if (existingUser) {
     throw new AppError(USERNAME_ALREADY_TAKEN.errorCode, USERNAME_ALREADY_TAKEN.message, 400, ['username']);
   }
 };
 
 const checkIfEmailExists = async (userData: CreateUserDto) => {
-  const existingEmail = await User.findOne({ email: userData.email });
+  const emailNormalized = userData.email.trim().toLowerCase();
+  const existingEmail = await User.findOne({ email: emailNormalized });
   if (existingEmail) {
     throw new AppError(EMAIL_ALREADY_TAKEN.errorCode, EMAIL_ALREADY_TAKEN.message, 400, ['email']);
   }
@@ -74,7 +79,8 @@ const checkIfEmailExists = async (userData: CreateUserDto) => {
 
 const sendVerificationEmail = async (email: string) => {
   try {
-    const user = await User.findOne({ email });
+    const emailNormalized = email.trim().toLowerCase();
+    const user = await User.findOne({ email: emailNormalized });
     const successMessage = 'If email exists, we have sent you a verification email';
 
     if (!user) {
