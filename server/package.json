@@ -7,7 +7,7 @@
   "author": "Kacper Barabasz",
   "main": "server.ts",
   "scripts": {
-    "test": "vitest run",
+    "test": "jest",
     "watch": "nodemon --exec tsx src/server.ts",
     "dev": "tsx src/server.ts",
     "build": "tsc -p tsconfig.json",
