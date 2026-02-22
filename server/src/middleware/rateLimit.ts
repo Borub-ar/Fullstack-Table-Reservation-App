@@ -28,3 +28,17 @@ export const verificationLimiter = rateLimit({
   standardHeaders: true,
   handler: jsonLimiterHandler,
 });
+
+export const loginLimiter = rateLimit({
+  windowMs: WINDOW_MS,
+  limit: 15,
+  standardHeaders: true,
+  handler: jsonLimiterHandler,
+});
+
+export const refreshSessionTokenLimiter = rateLimit({
+  windowMs: WINDOW_MS,
+  limit: 60,
+  standardHeaders: true,
+  handler: jsonLimiterHandler,
+});
