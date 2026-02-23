@@ -44,9 +44,9 @@ export const httpResendVerificationEmail = async (token: string) => {
   }
 };
 
-export const httpLoginUser = async (username: string, password: string) => {
+export const httpLoginUser = async (username: string, password: string, rememberMe: boolean) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/users/login`, { username, password });
+    const response = await axios.post(`${API_BASE_URL}/users/login`, { username, password, rememberMe });
     return response.data;
   } catch (error) {
     return (error as AxiosError).response?.data;

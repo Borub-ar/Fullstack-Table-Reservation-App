@@ -49,11 +49,11 @@ const useUser = () => {
     return result;
   };
 
-  const loginUser = async (username: string, password: string) => {
+  const loginUser = async (username: string, password: string, rememberMe: boolean) => {
     if (isLoading) return;
     setIsLoading(true);
 
-    const result = await httpLoginUser(username, password);
+    const result = await httpLoginUser(username, password, rememberMe);
     setIsLoading(false);
     return result;
   };

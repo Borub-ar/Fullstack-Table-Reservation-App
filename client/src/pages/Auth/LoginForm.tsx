@@ -20,7 +20,7 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async () => {
-    const response = await loginUser(username, password);
+    const response = await loginUser(username, password, rememberMe);
 
     if (!response.success) {
       showToast(response.message, 'error');
