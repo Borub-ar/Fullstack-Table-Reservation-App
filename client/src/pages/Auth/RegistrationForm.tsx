@@ -11,17 +11,7 @@ import useUser from '../../hooks/useUser';
 import { registrationSchema } from '../../../../shared/validation/registrationSchema';
 
 import type { AuthOutletContext } from './AuthWrapper';
-
-interface ValidationErrors {
-  [key: string]: string[];
-}
-
-interface FormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import type { FormData } from '../../types/user';
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -34,7 +24,7 @@ const RegistrationForm = () => {
     confirmPassword: '',
   });
 
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
   const [emailExternalError, setEmailExternalError] = useState(false);
   const [usernameExternalError, setUsernameExternalError] = useState(false);
 

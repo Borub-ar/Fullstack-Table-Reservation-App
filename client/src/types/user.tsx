@@ -3,3 +3,10 @@ export interface CreateUserData {
   password: string;
   email: string;
 }
+
+export interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
