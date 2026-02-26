@@ -14,7 +14,10 @@ import {
 
 import { sendVerificationEmailService } from '../../services/email.service.js';
 import type { CreateUserDto } from '../../types/user.js';
-import { generateVerificationToken } from '../../utils/generateVerificationToken.js';
+
+import generateVerificationToken from '../../utils/generateVerificationToken.js';
+import generateJwtToken from '../../utils/jwt.js';
+
 import User from './users.mongo.js';
 import { registrationSchema } from '../../../../shared/validation/registrationSchema.js';
 

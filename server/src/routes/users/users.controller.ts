@@ -8,7 +8,7 @@ import {
   verifyEmail,
 } from '../../models/users/users.model.js';
 
-import { tryCatch } from '../../utils/tryCatch.js';
+import tryCatch from '../../utils/tryCatch.js';
 
 export const createUserHandler = tryCatch(async (req: Request, res: Response) => {
   const { username, password, email } = req.body;
