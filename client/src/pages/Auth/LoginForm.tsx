@@ -26,8 +26,8 @@ const LoginForm = () => {
       return;
     }
 
-    navigate('/');
     showToast(response.message, 'success');
+    // navigate('/');
   };
 
   return (

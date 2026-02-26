@@ -36,8 +36,8 @@ export const verifyEmailHandler = tryCatch(async (req: Request, res: Response) =
 });
 
 export const loginUserHandler = tryCatch(async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  const response = await loginUser(username, password);
+  const { username, password, rememberMe } = req.body;
+  const response = await loginUser(username, password, rememberMe);
   return res.status(200).json(response);
 });
 

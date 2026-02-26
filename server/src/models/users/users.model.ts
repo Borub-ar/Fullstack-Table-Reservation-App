@@ -162,10 +162,10 @@ const getVerifiableUserByToken = async (token: string | undefined) => {
   return user;
 };
 
-const loginUser = async (username: string, password: string) => {
+const loginUser = async (username: string, password: string, rememberMe: boolean) => {
   try {
-    console.log('LOGIN', { username, password });
-    const user = await User.findOne({ username, password });
+    console.log('LOGIN', { username, password, rememberMe });
+    const user = await User.findOne({ username });
 
     if (!user) {
       throw new AppError(INVALID_CREDENTIALS.errorCode, INVALID_CREDENTIALS.message, 400);
@@ -180,7 +180,7 @@ const loginUser = async (username: string, password: string) => {
     if (!user.isVerified) {
       throw new AppError(UNVERIFIED_ACCOUNT.errorCode, UNVERIFIED_ACCOUNT.message, 400);
     }
-    
+
     return { success: true, message: 'Login successful' };
   } catch (error) {
     console.error('Error logging in:', error);
