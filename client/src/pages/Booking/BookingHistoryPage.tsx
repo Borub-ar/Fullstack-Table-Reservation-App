@@ -1,12 +1,9 @@
 const BookingHistoryPage = () => {
-  const reservations: { date: string; time: string; table: string; guests: string; status: string }[] = [];
-
   return (
     <div className='h-full min-w-0 flex flex-col p-4 sm:p-6 w-full max-w-full'>
       <h1 className='text-lg sm:text-xl font-semibold text-zinc-100 mb-4 shrink-0'>Moje rezerwacje</h1>
 
-      {/* Desktop: table */}
-      <div className='hidden md:block bg-zinc-900/80 rounded-xl border border-zinc-800 overflow-x-auto flex-1 min-h-0 min-w-0 flex flex-col'>
+      <div className='md:block bg-zinc-900/80 rounded-xl border border-zinc-800 overflow-x-auto flex-1 min-h-0 min-w-0 flex flex-col'>
         <table className='w-full shrink-0'>
           <thead>
             <tr className='bg-zinc-800/50 border-b border-zinc-800'>
@@ -24,7 +21,9 @@ const BookingHistoryPage = () => {
               <td className='py-3 px-4 text-zinc-400 text-sm'>—</td>
               <td className='py-3 px-4 text-zinc-400 text-sm'>—</td>
               <td className='py-3 px-4 text-right'>
-                <span className='inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-700 text-zinc-400'>—</span>
+                <span className='inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-700 text-zinc-400'>
+                  —
+                </span>
               </td>
             </tr>
           </tbody>
@@ -32,30 +31,6 @@ const BookingHistoryPage = () => {
         <div className='flex-1 flex items-center justify-center text-zinc-500 text-sm'>
           Brak rezerwacji. Wybierz datę i stolik, aby utworzyć rezerwację.
         </div>
-      </div>
-
-      {/* Mobile: cards */}
-      <div className='md:hidden flex-1 min-h-0 overflow-y-auto flex flex-col gap-3'>
-        {reservations.length === 0 ? (
-          <div className='flex-1 flex items-center justify-center text-zinc-500 text-sm text-center px-4'>
-            Brak rezerwacji. Wybierz datę i stolik, aby utworzyć rezerwację.
-          </div>
-        ) : (
-          reservations.map((r, i) => (
-            <div
-              key={i}
-              className='bg-zinc-900/80 rounded-xl border border-zinc-800 p-4 flex flex-col gap-2'>
-              <div className='flex justify-between items-start'>
-                <span className='text-zinc-400 text-sm'>{r.date} · {r.time}</span>
-                <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-700 text-zinc-400'>
-                  {r.status}
-                </span>
-              </div>
-              <div className='text-zinc-300 font-medium'>Stolik {r.table}</div>
-              <div className='text-zinc-500 text-sm'>{r.guests} gości</div>
-            </div>
-          ))
-        )}
       </div>
     </div>
   );
