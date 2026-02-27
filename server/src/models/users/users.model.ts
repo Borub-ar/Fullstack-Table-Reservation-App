@@ -42,7 +42,7 @@ const createUser = async (userData: CreateUserDto) => {
       passwordHash,
       verificationToken,
       verificationTokenExpiresAt: new Date(Date.now() + VERIFICATION_TOKEN_EXPIRES_IN),
-      userId: crypto.randomUUID(),
+      id: crypto.randomUUID(),
     };
 
     const newUser = new User(userToCreate);
@@ -184,7 +184,10 @@ const loginUser = async (username: string, password: string, rememberMe: boolean
       throw new AppError(UNVERIFIED_ACCOUNT.errorCode, UNVERIFIED_ACCOUNT.message, 400);
     }
 
-    return { success: true, message: 'Login successful' };
+    const accessJwtToken = generateJwtToken(user.id, user.username, '15min');
+    const refreshJwtToken = generateJwtToken(user.id, user.username, '7d');
+
+    return { success: true, message: 'Login successful', accessToken: accessJwtToken, refreshToken: refreshJwtToken };
   } catch (error) {
     console.error('Error logging in:', error);
     if (error instanceof AppError) throw error;

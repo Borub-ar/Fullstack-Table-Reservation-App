@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   verificationToken: { type: String, default: null },
   verificationTokenExpiresAt: { type: Date, default: null },
+  refreshToken: { type: String },
+  id: {type: String, required: true}
 });
 
 const User = mongoose.model('User', userSchema);
