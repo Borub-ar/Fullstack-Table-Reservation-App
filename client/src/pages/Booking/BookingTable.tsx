@@ -5,10 +5,10 @@ interface BookingTableProps {
 
 const BookingTable = ({ number, capacity = '2–4 os.' }: BookingTableProps) => {
   return (
-    <div className='group relative aspect-square min-h-[80px] rounded-2xl bg-linear-to-br from-stone-50 to-stone-100 border border-stone-200 flex flex-col items-center justify-center gap-2 hover:border-amber-400 hover:shadow-md hover:shadow-amber-100/50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'>
-      <div className='w-12 h-8 rounded-md bg-stone-300/70 group-hover:bg-amber-200/80 border border-stone-200/50' />
-      <span className='text-sm font-semibold text-stone-700 group-hover:text-amber-700'>Stolik {number}</span>
-      <span className='text-xs text-stone-400'>{capacity}</span>
+    <div className='group relative w-full aspect-square max-w-full rounded-xl sm:rounded-2xl bg-zinc-800/60 border border-zinc-700 flex flex-col items-center justify-center gap-1 sm:gap-2 hover:border-cyan-500/70 hover:bg-zinc-800 hover:shadow-lg hover:shadow-cyan-500/10 active:scale-[0.98] transition-all duration-200 cursor-pointer touch-manipulation'>
+      <div className='w-10 h-6 sm:w-12 sm:h-8 rounded-md bg-zinc-600/70 group-hover:bg-cyan-500/30 border border-zinc-600 shrink-0' />
+      <span className='text-sm font-semibold text-zinc-300 group-hover:text-cyan-400'>Stolik {number}</span>
+      <span className='text-xs text-zinc-500'>{capacity}</span>
     </div>
   );
 };
